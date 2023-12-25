@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Serviço</title>
+
+
+    <script>
+        function fetchData() {
+            fetch('/input')
+                .then(response => response.text())
+                .then(data => {
+                    alert(data); // Exibe o retorno em um popup
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Adicionar Serviço</h1>
+<form id="serviceForm">
+    <label for="nameClient">Nome do Cliente:</label>
+    <input type="text" id="nameClient" required><br><br>
+
+    <label for="nameService">Nome do Serviço:</label>
+    <input type="text" id="nameService" required><br><br>
+
+    <label for="description">Descrição:</label><br>
+    <textarea id="description" rows="4" cols="50"></textarea><br><br>
+
+    <label for="price">Preço:</label>
+    <input type="number" id="price" step="0.01" required><br><br>
+
+    <label for="status">Status:</label>
+    <select id="status" required>
+        <option value="Pending">Pendente</option>
+        <option value="Completed">Completo</option>
+    </select><br><br>
+
+    <input type="submit" value="Adicionar Serviço">
+</form>
+
+<p id="resultMessage"></p>
+
+<script>
+    document.getElementById('serviceForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const nameClient = document.getElementById('nameClient').value;
+        const nameService = document.getElementById('nameService').value;
+        const description = document.getElementById('description').value;
+        const price = parseFloat(document.getElementById('price').value);
+        const status = document.getElementById('status').value;
+
+        const data = {
+            nameClient: nameClient,
+            nameService: nameService,
+            description: description,
+            price: price,
+            status: status
+        };
+
+        fetch('/services/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.text())
+        .then(message => {
+            document.getElementById('resultMessage').textContent = message;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+<h1>Exibir Retorno em Popup</h1>
+<button onclick="fetchData()">Clique para ver o retorno</button>
+
+</body>
+</html>

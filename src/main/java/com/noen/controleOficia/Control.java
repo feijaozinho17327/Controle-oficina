@@ -55,7 +55,7 @@ public class Control {
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                double key = resultSet.getDouble("key");
+                double key = resultSet.getDouble("service_key");
                 Services service = new Services(
                         resultSet.getString("nameClient"),
                         resultSet.getString("nameService"),
@@ -95,6 +95,8 @@ public class Control {
             servicesMap.put(key, services);
 
             insertIntoDatabase(key, services);
+
+
         } catch (NullPointerException | IllegalArgumentException e) {
             return "Falha ao adicionar serviço, caractere inválido.";
         } catch (Exception e) {
@@ -105,7 +107,7 @@ public class Control {
 
         public void insertIntoDatabase(Double key, Services service) {
 
-            String sql = "INSERT INTO services (key, nameClient, nameService, description, price, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO services (service_key, nameClient, nameService, description, price, status) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setDouble(1, key); // Ou você pode definir manualmente a chave aqui, se desejar
@@ -194,6 +196,12 @@ public class Control {
         serviceList.addAll(servicesMap.values());
         return serviceList;
     }
+
+
+
+    @GetMapping("/input")
+
+    public String input() {return "Hello World!!!";}
 
 
 
