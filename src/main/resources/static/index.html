@@ -5,18 +5,7 @@
     <title>Adicionar Serviço</title>
 
 
-    <script>
-        function fetchData() {
-            fetch('/input')
-                .then(response => response.text())
-                .then(data => {
-                    alert(data); // Exibe o retorno em um popup
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                });
-        }
-    </script>
+
 </head>
 <body>
 <h1>Adicionar Serviço</h1>
@@ -72,15 +61,25 @@
         .then(response => response.text())
         .then(message => {
             document.getElementById('resultMessage').textContent = message;
+            resetForm();
         })
         .catch(error => {
             console.error('Error:', error);
         });
     });
+
+    function resetForm() {
+        // Resetando os valores dos campos do formulário após o envio
+        document.getElementById('nameClient').value = '';
+        document.getElementById('nameService').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('status').value = 'Pending';
+    }
+
 </script>
 
-<h1>Exibir Retorno em Popup</h1>
-<button onclick="fetchData()">Clique para ver o retorno</button>
+
 
 </body>
 </html>

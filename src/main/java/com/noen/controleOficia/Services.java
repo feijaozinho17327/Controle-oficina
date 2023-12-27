@@ -1,7 +1,7 @@
 package com.noen.controleOficia;
 import javax.persistence.Entity;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 @Entity
@@ -15,10 +15,10 @@ public class Services {
 
     private String status;
 
-    private LocalDate date;
+    private Date date;
 
 
-    public Services(String nameClient, String nameService, String description, double price, String status, LocalDate date) {
+    public Services(String nameClient, String nameService, String description, double price, String status, Date date) {
         this.nameClient = nameClient;
         this.nameService = nameService;
         this.description = description;
@@ -68,11 +68,11 @@ public class Services {
         this.status = status;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

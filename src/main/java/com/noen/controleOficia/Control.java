@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.*;
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.Date;
 
@@ -19,8 +20,8 @@ public class Control {
 
     public Control() {
         this.servicesMap = new HashMap<>();
-        String dbURL = "jdbc:mysql://192.168.1.115:3306/oficina";
-        String dbUser = "admin";
+        String dbURL = "jdbc:mysql://localhost/oficina";
+        String dbUser = "root";
         String dbPassword = "senha123";
 
         try {
@@ -62,7 +63,7 @@ public class Control {
                         resultSet.getString("description"),
                         resultSet.getDouble("price"),
                         resultSet.getString("status"),
-                        resultSet.getDate("date").toLocalDate()
+                        resultSet.getDate("date")
                 );
                 servicesMap.put(key, service);
             }
@@ -72,6 +73,11 @@ public class Control {
 
     @PostMapping("/add")
     public String addService(@RequestBody ServiceRequest request) {
+
+        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+
+
+        Date date = new Date();
 
         try {
             if (request.getNameClient() == null || request.getNameClient().isEmpty() ||
@@ -85,7 +91,7 @@ public class Control {
                     request.getDescription(),
                     request.getPrice(),
                     request.getStatus(),
-                    LocalDate.now()
+                    sqlDate
 
             );
 
@@ -100,14 +106,14 @@ public class Control {
         } catch (NullPointerException | IllegalArgumentException e) {
             return "Falha ao adicionar serviço, caractere inválido.";
         } catch (Exception e) {
-            return "Erro inesperado";
+            return "Erro inesperado " + e;
         }
         return "Serviço adicionado com sucesso.";
     }
 
         public void insertIntoDatabase(Double key, Services service) {
 
-            String sql = "INSERT INTO services (service_key, nameClient, nameService, description, price, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO services (service_key, nameClient, nameService, description, price, status, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setDouble(1, key); // Ou você pode definir manualmente a chave aqui, se desejar
@@ -116,6 +122,7 @@ public class Control {
                 statement.setString(4, service.getDescription());
                 statement.setDouble(5, service.getPrice());
                 statement.setString(6, service.getStatus());
+                statement.setDate(7, service.getDate());
 
                 statement.executeUpdate();
             } catch (SQLException e) {
